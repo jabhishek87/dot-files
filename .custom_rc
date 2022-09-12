@@ -1,0 +1,28 @@
+# mount
+# create symlink
+# ln -s /mnt/c/data-drive/workspace/ workspace
+
+
+##################################
+#  Add below line to zshrc ot bashrc file
+######################################
+
+# if [ -f ~/workspace/.custom_rc ]; then
+#     . ~/workspace/.custom_rc
+# fi
+
+export github_pp="@bhishekJ@isw@1"
+github_pat="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"
+alias k="kubectl"
+alias kc="kubectl create"
+export dry="--dry-run=client -o yaml"
+
+plugin=(git zsh-autosuggestions zsh-syntax-highlighting)
+source $ZSH/oh-my-zsh.sh
+
+source $ZSH_CUSTOM/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+export VIRTUALENVWRAPPER_PYTHON='/usr/bin/python3'
+export WORKON_HOME=~/Envs
+source ~/.local/bin/virtualenvwrapper.sh
+
