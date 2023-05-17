@@ -41,7 +41,7 @@ function Install-Package {
         'docker-desktop','git','go','jdk8','golang','greenshot',
         'gsudo','microsoft-edge-insider-dev', 'nodejs','powershell-core',
         'microsoft-windows-terminal', 'powertoys','python3',
-        'sysinternals','vlc','vscode','winget',
+        'sysinternals','vlc','vscode','winget','notion',
         'cascadia-code-nerd-font', 'windirstat'
     )
 
