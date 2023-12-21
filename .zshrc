@@ -121,9 +121,13 @@ if [ -f ~/workspace/.custom_rc ]; then
     . ~/workspace/.custom_rc
 fi
 alias vim=nvim
+#alias tmux="TERM=screen-256color-bce tmux"
 
 export GOPATH='/home/ajaiswal/go'
-export PATH=$PATH:/usr/local/go/bin:/home/ajaiswal/.local/bin/:$GOPATH/bin/
+export PATH="$PATH:/usr/local/go/bin:/home/ajaiswal/.local/bin/:$GOPATH/bin/:$HOME/.tmuxifier/bin"
+
+eval "$(tmuxifier init -)"
+export EDITOR="/usr/bin/nvim"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
