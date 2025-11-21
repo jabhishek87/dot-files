@@ -9,8 +9,8 @@ return {
         ensure_installed = {
           "bash",
           "lua",
-	  "vim",
-	  "python",
+	        "vim",
+	        "python",
         },
         highlight = { enable = true },
         indent = { enable = false },
