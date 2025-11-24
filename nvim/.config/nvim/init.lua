@@ -1,5 +1,6 @@
 --
 -- reference https://github.com/hendrikmi/neovim-kickstart-config
+-- https://www.youtube.com/watch?v=KYDG3AHgYEs
 --
 
 require 'core.options' -- Load general options
