@@ -8,12 +8,9 @@ Personal collection of all dot files in a single place
 ## Install dependency
 ```sh
 # install dependency
-sudo apt update -y
-sudo apt install -y git curl tmux ripgrep glibc-source stow
-
-# install latest nvim
-curl -LO https://github.com/neovim/neovim-releases/releases/download/nightly/nvim-linux64.deb
-sudo apt install ./nvim-linux64.deb
+sudo add-apt-repository ppa:neovim-ppa/unstable -y
+sudo apt update
+sudo apt install curl tmux ripgrep glibc-source stow make gcc unzip git xclip neovim
 
 # install lazygit
 # get tag name from here
