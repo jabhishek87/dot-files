@@ -41,3 +41,6 @@ if has('persistent_undo')
     set undofile
 endif
 
+" --- Activate Habamax ---
+set background=dark    " Tell Vim you prefer dark backgrounds
+colorscheme slate    " Load the built-in Habamax theme
