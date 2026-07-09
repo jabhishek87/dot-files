@@ -8,3 +8,14 @@ foo.*
 data
 **/lazy-lock.json
 **/lazyvim.json
+
+# Ignore specific secret profile scripts
+shell/.secret_rc
+.secret_rc
+
+# Ignore all Vim persistent undo histories and swap files
+*.un~
+.*.un~
+*.swp
+.*.swp
+*~
