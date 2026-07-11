@@ -20,3 +20,4 @@ window-padding-y = 12
 # --- SSH Compatibility Fix ---
 shell-integration-features = ssh-env,ssh-terminfo
 
+link-url = true

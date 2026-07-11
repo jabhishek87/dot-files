@@ -28,21 +28,33 @@ alias gpush="git push origin HEAD:refs/for/master"
 # ==============================================================================
 parse_git_branch() {
     if git rev-parse --is-inside-work-tree &>/dev/null; then
-        printf " \[\e[38;5;226m\](%s)\[\e[0m\]" "$(git branch --show-current 2>/dev/null)"
+        printf "(%s)" "$(git branch --show-current 2>/dev/null)"
     fi
 }
 
 build_prompt() {
     local EXIT_STATUS=$?
     local STATUS_SYMBOL
-    
+
     if [ $EXIT_STATUS -eq 0 ]; then
-        STATUS_SYMBOL="\[\e[38;5;120m\]✓"
+        STATUS_SYMBOL="✓"
     else
-        STATUS_SYMBOL="\[\e[38;5;196m\]✗"
+        STATUS_SYMBOL="✗"
     fi
 
-    PS1="\[\e[38;5;120m\]\w\[\e[0m\]\$(parse_git_branch) \${STATUS_SYMBOL}\[\e[0m\] "
+    local GIT_BRANCH
+    GIT_BRANCH=$(parse_git_branch)
+
+    # Build PS1 with proper \[...\] escapes at assignment time
+    PS1="\[\e[38;5;120m\]\w\[\e[0m\]"
+    if [ -n "$GIT_BRANCH" ]; then
+        PS1+=" \[\e[38;5;226m\]${GIT_BRANCH}\[\e[0m\]"
+    fi
+    if [ $EXIT_STATUS -eq 0 ]; then
+        PS1+=" \[\e[38;5;120m\]${STATUS_SYMBOL}\[\e[0m\] "
+    else
+        PS1+=" \[\e[38;5;196m\]${STATUS_SYMBOL}\[\e[0m\] "
+    fi
 }
 
 PROMPT_COMMAND=build_prompt
