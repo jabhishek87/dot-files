@@ -21,3 +21,13 @@ window-padding-y = 12
 shell-integration-features = ssh-env,ssh-terminfo
 
 link-url = true
+
+# --- Clipboard / Paste Keybinds ---
+# Make both Shift+Insert and Ctrl+Shift+V paste from clipboard
+keybind = shift+insert=paste_from_clipboard
+keybind = ctrl+shift+v=paste_from_clipboard
+keybind = ctrl+shift+c=copy_to_clipboard
+
+# --- Session Startup ---
+# Auto-launch tmux dev workspace (nvim + term + ssh)
+command = bash -lc "~/.local/bin/dev-session"

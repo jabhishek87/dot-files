@@ -29,11 +29,7 @@ alias gpush="git push origin HEAD:refs/for/master"
 # ==============================================================================
 parse_git_branch() {
     if git rev-parse --is-inside-work-tree &>/dev/null; then
-<<<<<<< Updated upstream
         printf "(%s)" "$(git branch --show-current 2>/dev/null)"
-=======
-        printf " \001\e[38;5;226m\002(%s)\001\e[0m\002" "$(git branch --show-current 2>/dev/null)"
->>>>>>> Stashed changes
     fi
 }
 
