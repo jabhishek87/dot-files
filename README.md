@@ -14,7 +14,22 @@ brew install stow         # macOS
 
 ## Usage
 ```
+# stow all at once 
+stow -v *
+stow -v -t ~ *
+# unstow remove all at once 
+stow -vD *
+stow -vD -t ~ *
+
+# stow each folder
 stow -v -t ~ ghostty
 stow -v -t ~ shell
 
+# To Stow chosen packages
+stow -v ghostty lazyvim shell tmux vim
+
+# To Unstow chosen packages
+stow -vD ghostty lazyvim shell tmux vim
+
 ```
+

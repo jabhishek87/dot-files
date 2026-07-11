@@ -8,8 +8,9 @@
 [ -f ~/.work_ssh_rc ] && source ~/.work_ssh_rc
 
 # Load local system binary environments
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:~/.npm-global/bin:$PATH"
 export HISTCONTROL=ignoreboth:erasedups
+
 
 # Pull local shell optimizations
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
@@ -28,7 +29,11 @@ alias gpush="git push origin HEAD:refs/for/master"
 # ==============================================================================
 parse_git_branch() {
     if git rev-parse --is-inside-work-tree &>/dev/null; then
+<<<<<<< Updated upstream
         printf "(%s)" "$(git branch --show-current 2>/dev/null)"
+=======
+        printf " \001\e[38;5;226m\002(%s)\001\e[0m\002" "$(git branch --show-current 2>/dev/null)"
+>>>>>>> Stashed changes
     fi
 }
 
@@ -37,6 +42,7 @@ build_prompt() {
     local STATUS_SYMBOL
 
     if [ $EXIT_STATUS -eq 0 ]; then
+
         STATUS_SYMBOL="✓"
     else
         STATUS_SYMBOL="✗"
@@ -55,8 +61,8 @@ build_prompt() {
     else
         PS1+=" \[\e[38;5;196m\]${STATUS_SYMBOL}\[\e[0m\] "
     fi
-}
 
+}
 PROMPT_COMMAND=build_prompt
 
 echo "custom rc loaded"
