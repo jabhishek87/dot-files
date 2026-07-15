@@ -28,17 +28,30 @@ alias gpush="git push origin HEAD:refs/for/master"
 # PROMPT ENGINE (Dynamic Neon Layout)
 # ==============================================================================
 parse_git_branch() {
+    # Verify we are in a git repository first
     if git rev-parse --is-inside-work-tree &>/dev/null; then
-        printf "(%s)" "$(git branch --show-current 2>/dev/null)"
+        # 1. Get current branch name
+        local branch
+        branch=$(git branch --show-current 2>/dev/null)
+        
+        # 2. Fallback to short commit SHA if in a detached HEAD state
+        if [ -z "$branch" ]; then
+            branch=$(git rev-parse --short HEAD 2>/dev/null)
+        fi
+        
+        # 3. Only print if we successfully retrieved a branch name or SHA
+        if [ -n "$branch" ]; then
+            printf "(%s)" "$branch"
+        fi
     fi
 }
 
 build_prompt() {
+    # Always capture the preceding command's exit code FIRST
     local EXIT_STATUS=$?
     local STATUS_SYMBOL
 
     if [ $EXIT_STATUS -eq 0 ]; then
-
         STATUS_SYMBOL="✓"
     else
         STATUS_SYMBOL="✗"
@@ -47,18 +60,22 @@ build_prompt() {
     local GIT_BRANCH
     GIT_BRANCH=$(parse_git_branch)
 
-    # Build PS1 with proper \[...\] escapes at assignment time
+    # Base prompt: hostname and current working directory
     PS1="\[\e[38;5;39m\]\h\[\e[0m\]:\[\e[38;5;120m\]\w\[\e[0m\]"
+    
+    # Safely inject the branch only if the string is genuinely not empty
     if [ -n "$GIT_BRANCH" ]; then
         PS1+=" \[\e[38;5;226m\]${GIT_BRANCH}\[\e[0m\]"
     fi
+    
+    # Append the exit status color indicator
     if [ $EXIT_STATUS -eq 0 ]; then
         PS1+=" \[\e[38;5;120m\]${STATUS_SYMBOL}\[\e[0m\] "
     else
         PS1+=" \[\e[38;5;196m\]${STATUS_SYMBOL}\[\e[0m\] "
     fi
-
 }
+
 PROMPT_COMMAND=build_prompt
 
 echo "custom rc loaded"
