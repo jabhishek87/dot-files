@@ -31,3 +31,7 @@ keybind = ctrl+shift+c=copy_to_clipboard
 # --- Session Startup ---
 # Auto-launch tmux dev workspace (nvim + term + ssh)
 command = bash -lc "~/.local/bin/dev-session"
+
+clipboard-read = allow
+clipboard-write = allow
+
