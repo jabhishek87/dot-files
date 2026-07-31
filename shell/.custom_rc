@@ -58,9 +58,10 @@ alias vpn_login='globalprotect connect --portal ://gpcloudservice.com'
 export dry='--dry-run=client -o yaml'
 
 # ==============================================================================
-# FZF
+# FZF + ZOXIDE (smart directory jump: z <partial_path>)
 # ==============================================================================
 [ -f ~/.fzf.bash ] && . ~/.fzf.bash
+command -v zoxide &>/dev/null && eval "$(zoxide init bash)"
 
 # ==============================================================================
 # EXTERNAL CONFIGS
