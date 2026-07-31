@@ -1,88 +1,69 @@
-# ==============================================================================
-# DEPENDENCY RESOLUTION & SOURCE MAPS
-# ==============================================================================
-# Pull runtime secrets securely
-[ -f ~/.secret_rc ] && source ~/.secret_rc
-
-# Pull corporate connection layouts
-[ -f ~/.work_ssh_rc ] && source ~/.work_ssh_rc
-
-# Load local system binary environments
-export PATH="$HOME/.local/bin:~/.npm-global/bin:$PATH"
-export HISTCONTROL=ignoreboth:erasedups
-
-
-# Pull local shell optimizations
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# ~/.custom_rc — portable shell config
+# Source this from any system's .bashrc: [ -f ~/.custom_rc ] && . ~/.custom_rc
 
 # ==============================================================================
-# RUNTIME CLI ALIASES
+# HISTORY & SHELL OPTIONS
 # ==============================================================================
-alias vpn_login="globalprotect connect --portal ://gpcloudservice.com"
-alias k="kubectl"
-alias kc="kubectl create"
-export dry="--dry-run=client -o yaml"
-alias gpush="git push origin HEAD:refs/for/master"
+HISTSIZE=10000
+HISTFILESIZE=20000
+HISTCONTROL=ignoreboth:erasedups
+shopt -s histappend checkwinsize cdspell autocd 2>/dev/null
 
 # ==============================================================================
-# PROMPT ENGINE (Dynamic Neon Layout)
+# PATH
 # ==============================================================================
-parse_git_branch() {
-    # Verify we are in a git repository first
-    if git rev-parse --is-inside-work-tree &>/dev/null; then
-        # 1. Get current branch name
-        local branch
-        branch=$(git branch --show-current 2>/dev/null)
-        
-        # 2. Fallback to short commit SHA if in a detached HEAD state
-        if [ -z "$branch" ]; then
-            branch=$(git rev-parse --short HEAD 2>/dev/null)
-        fi
-        
-        # 3. Only print if we successfully retrieved a branch name or SHA
-        if [ -n "$branch" ]; then
-            printf "(%s)" "$branch"
-        fi
-    fi
+export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"
+export EDITOR=vim
+
+# ==============================================================================
+# PROMPT: (venv) hostname:path ✓/✗
+# ==============================================================================
+__build_ps1() {
+    local ex=$?
+    local cyan='\[\e[36m\]' green='\[\e[32m\]' yellow='\[\e[33m\]' red='\[\e[31m\]' gray='\[\e[38;5;245m\]' reset='\[\e[0m\]'
+    local status venv="" branch=""
+    [ $ex -eq 0 ] && status="${green}✓" || status="${red}✗"
+    [ -n "$VIRTUAL_ENV" ] && venv="${gray}($(basename "$VIRTUAL_ENV")) ${reset}"
+    local gdir h
+    gdir="$(git rev-parse --git-dir 2>/dev/null)" || true
+    [ -n "$gdir" ] && h="$(cat "$gdir/HEAD" 2>/dev/null)" && case $h in ref:*) branch=" ${yellow}(${h##*/})${reset}";; *) branch=" ${yellow}(${h:0:7})${reset}";; esac
+    PS1="${venv}${cyan}\h${reset}:${green}\w${reset}${branch} ${status}${reset} "
 }
+PROMPT_COMMAND=__build_ps1
 
-build_prompt() {
-    # Always capture the preceding command's exit code FIRST
-    local EXIT_STATUS=$?
-    local STATUS_SYMBOL
+# ==============================================================================
+# COMPLETIONS
+# ==============================================================================
+# Override tilde completion — NIS/getent hangs on this system (25K+ users, unresponsive)
+_backup_comp_wordbreaks="$COMP_WORDBREAKS"
+COMP_WORDBREAKS="${COMP_WORDBREAKS//\~/}"
 
-    if [ $EXIT_STATUS -eq 0 ]; then
-        STATUS_SYMBOL="✓"
-    else
-        STATUS_SYMBOL="✗"
-    fi
+if ! shopt -oq posix 2>/dev/null; then
+    [ -f /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
+    [ -f /etc/bash_completion ] && . /etc/bash_completion
+fi
+command -v kubectl &>/dev/null && source <(kubectl completion bash 2>/dev/null)
 
-    # Check for an active Python virtual environment
-    local VENV_PROMPT=""
-    if [ -n "$VIRTUAL_ENV" ]; then
-        # Extracts just the folder name from the full path
-        VENV_PROMPT="($(basename "$VIRTUAL_ENV")) "
-    fi
+# ==============================================================================
+# ALIASES
+# ==============================================================================
+alias ls='ls --color=auto'
+alias ll='ls -alF'
+alias la='ls -A'
+alias grep='grep --color=auto'
+alias k='kubectl'
+alias kc='kubectl create'
+alias gpush='git push origin HEAD:refs/for/master'
+alias vpn_login='globalprotect connect --portal ://gpcloudservice.com'
+export dry='--dry-run=client -o yaml'
 
-    local GIT_BRANCH
-    GIT_BRANCH=$(parse_git_branch)
+# ==============================================================================
+# FZF
+# ==============================================================================
+[ -f ~/.fzf.bash ] && . ~/.fzf.bash
 
-    # Base prompt: start with venv (if active), followed by hostname and directory
-    PS1="\[\e[38;5;245m\]${VENV_PROMPT}\[\e[38;5;39m\]\h\[\e[0m\]:\[\e[38;5;120m\]\w\[\e[0m\]"
-
-    # Safely inject the branch only if the string is genuinely not empty
-    if [ -n "$GIT_BRANCH" ]; then
-        PS1+=" \[\e[38;5;226m\]${GIT_BRANCH}\[\e[0m\]"
-    fi
-
-    # Append the exit status color indicator
-    if [ $EXIT_STATUS -eq 0 ]; then
-        PS1+=" \[\e[38;5;120m\]${STATUS_SYMBOL}\[\e[0m\] "
-    else
-        PS1+=" \[\e[38;5;196m\]${STATUS_SYMBOL}\[\e[0m\] "
-    fi
-}
-PROMPT_COMMAND=build_prompt
-
-echo "custom rc loaded"
-
+# ==============================================================================
+# EXTERNAL CONFIGS
+# ==============================================================================
+[ -f ~/.secret_rc ] && . ~/.secret_rc
+[ -f ~/.work_ssh_rc ] && . ~/.work_ssh_rc
