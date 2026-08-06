@@ -16,33 +16,13 @@ export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"
 export EDITOR=vim
 
 # ==============================================================================
-# PROMPT: (venv) hostname:path ✓/✗
-# ==============================================================================
-__build_ps1() {
-    local ex=$?
-    local cyan='\[\e[36m\]' green='\[\e[32m\]' yellow='\[\e[33m\]' red='\[\e[31m\]' gray='\[\e[38;5;245m\]' reset='\[\e[0m\]'
-    local status venv="" branch=""
-    [ $ex -eq 0 ] && status="${green}✓" || status="${red}✗"
-    [ -n "$VIRTUAL_ENV" ] && venv="${gray}($(basename "$VIRTUAL_ENV")) ${reset}"
-    local gdir h
-    gdir="$(git rev-parse --git-dir 2>/dev/null)" || true
-    [ -n "$gdir" ] && h="$(cat "$gdir/HEAD" 2>/dev/null)" && case $h in ref:*) branch=" ${yellow}(${h##*/})${reset}";; *) branch=" ${yellow}(${h:0:7})${reset}";; esac
-    PS1="${venv}${cyan}\h${reset}:${green}\w${reset}${branch} ${status}${reset} "
-}
-PROMPT_COMMAND=__build_ps1
-
-# ==============================================================================
 # COMPLETIONS
 # ==============================================================================
-# Override tilde completion — NIS/getent hangs on this system (25K+ users, unresponsive)
-_backup_comp_wordbreaks="$COMP_WORDBREAKS"
-COMP_WORDBREAKS="${COMP_WORDBREAKS//\~/}"
-
-if ! shopt -oq posix 2>/dev/null; then
-    [ -f /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
-    [ -f /etc/bash_completion ] && . /etc/bash_completion
-fi
-command -v kubectl &>/dev/null && source <(kubectl completion bash 2>/dev/null)
+#if ! shopt -oq posix 2>/dev/null; then
+#    [ -f /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
+#    [ -f /etc/bash_completion ] && . /etc/bash_completion
+#fi
+#command -v kubectl &>/dev/null && source <(kubectl completion bash 2>/dev/null)
 
 # ==============================================================================
 # ALIASES
@@ -62,6 +42,12 @@ export dry='--dry-run=client -o yaml'
 # ==============================================================================
 [ -f ~/.fzf.bash ] && . ~/.fzf.bash
 command -v zoxide &>/dev/null && eval "$(zoxide init bash)"
+# starship related 
+# Add the following line near the top of ~/.bashrc
+source ~/.local/share/blesh/ble.sh
+# Add the following line at the end of ~/.bashrc
+#[[ ${BLE_VERSION-} ]] && ble-attach
+eval "$(starship init bash)"
 
 # ==============================================================================
 # EXTERNAL CONFIGS

@@ -33,3 +33,6 @@ stow -vD ghostty lazyvim shell tmux vim
 
 ```
 
+## Packages
+https://starship.rs/
+https://github.com/akinomyoga/ble.sh

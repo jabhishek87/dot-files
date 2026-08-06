@@ -1,25 +1,19 @@
 # --- Theme and Colors ---
 background-opacity = 0.95
-background-blur = true
 
 # --- Typography & Ligatures ---
 font-family = "JetBrains Mono"
-font-size = 13
-font-thicken = true
+font-size = 14
+
 
 # --- Cursor Customisation ---
 cursor-style = block
 cursor-style-blink = true
 cursor-color = #ff007f
 
-# --- Window Styling ---
-window-decoration = true
-window-padding-x = 12
-window-padding-y = 12
 
 # --- SSH Compatibility Fix ---
 shell-integration-features = ssh-env,ssh-terminfo
-
 link-url = true
 
 # --- Clipboard / Paste Keybinds ---
@@ -27,11 +21,10 @@ link-url = true
 keybind = shift+insert=paste_from_clipboard
 keybind = ctrl+shift+v=paste_from_clipboard
 keybind = ctrl+shift+c=copy_to_clipboard
-
-# --- Session Startup ---
-# Auto-launch tmux dev workspace (nvim + term + ssh)
-command = bash -lc "~/.local/bin/dev-session"
-
 clipboard-read = allow
 clipboard-write = allow
 
+# --- Window Styling ---
+window-decoration = true
+window-padding-x = 12
+window-padding-y = 12
