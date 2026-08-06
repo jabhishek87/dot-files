@@ -42,3 +42,25 @@ vlm_ssh() {
     sshpass -p "$STX_PASS" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -p "$port" -o ProxyCommand="sshpass -p \"$STX_PASS\" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p jumpuser@$jump_host" sysadmin@"$target_ip"
 }
 
+vlm_scp() {
+    if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
+        echo "Usage: vlm_scp <local_file> <jump_host> <lab_ip>:<remote_path> [port]"
+        echo ""
+        echo "Examples:"
+        echo "  vlm_scp ./cpu.py yow-cgts5-lx 10.11.0.13:/tmp/"
+        echo "  vlm_scp ./file.py 128.224.150.147 10.11.0.13:/home/sysadmin/"
+        echo "  vlm_scp ./script.sh yow-cgts5-lx 10.11.0.13:/tmp/ 42222"
+        return 1
+    fi
+    local local_file="$1"
+    local jump_host="$2"
+    local remote="$3"
+    local port="${4:-42222}"
+    local target_ip="${remote%%:*}"
+    local remote_path="${remote#*:}"
+    sshpass -p "$STX_PASS" scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR \
+        -P "$port" \
+        -o ProxyCommand="sshpass -p \"$STX_PASS\" ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p jumpuser@$jump_host" \
+        "$local_file" sysadmin@"$target_ip":"$remote_path"
+}
+
