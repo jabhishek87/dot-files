@@ -16,16 +16,21 @@ export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:$PATH"
 export EDITOR=vim
 
 # ==============================================================================
-# COMPLETIONS
+# ENVIRONMENT & GENERAL SETTINGS
 # ==============================================================================
-#if ! shopt -oq posix 2>/dev/null; then
-#    [ -f /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
-#    [ -f /etc/bash_completion ] && . /etc/bash_completion
-#fi
-#command -v kubectl &>/dev/null && source <(kubectl completion bash 2>/dev/null)
+export EDITOR=vim
+
+# Core Shell Completions
+if ! shopt -oq posix 2>/dev/null; then
+    [ -f /usr/share/bash-completion/bash_completion ] && . /usr/share/bash-completion/bash_completion
+    [ -f /etc/bash_completion ] && . /etc/bash_completion
+fi
+
+# Disable terminal output freeze to make Ctrl+S work in Tmux Resurrect
+stty -ixon
 
 # ==============================================================================
-# ALIASES
+# ALIASES & TOOLS
 # ==============================================================================
 alias ls='ls --color=auto'
 alias ll='ls -alF'
@@ -37,20 +42,16 @@ alias gpush='git push origin HEAD:refs/for/master'
 alias vpn_login='globalprotect connect --portal ://gpcloudservice.com'
 export dry='--dry-run=client -o yaml'
 
-# ==============================================================================
-# FZF + ZOXIDE (smart directory jump: z <partial_path>)
-# ==============================================================================
+# Tool Autocompletions
+command -v kubectl &>/dev/null && source <(kubectl completion bash 2>/dev/null)
 [ -f ~/.fzf.bash ] && . ~/.fzf.bash
-command -v zoxide &>/dev/null && eval "$(zoxide init bash)"
-# starship related 
-# Add the following line near the top of ~/.bashrc
-source ~/.local/share/blesh/ble.sh
-# Add the following line at the end of ~/.bashrc
-#[[ ${BLE_VERSION-} ]] && ble-attach
-eval "$(starship init bash)"
 
-# ==============================================================================
-# EXTERNAL CONFIGS
-# ==============================================================================
+
+# Modern Terminal Prompt Setup
+eval "$(starship init bash)"
+# External Profiles
 [ -f ~/.secret_rc ] && . ~/.secret_rc
 [ -f ~/.work_ssh_rc ] && . ~/.work_ssh_rc
+
+# Fast Directory Jumping, keep yhis on last line
+command -v zoxide &>/dev/null && eval "$(zoxide init bash)"

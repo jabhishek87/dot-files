@@ -1,19 +1,9 @@
-add_newline = false
 command_timeout = 1000
 
-# 1. Left Side Prompt: Only show the vital entry elements
-format = """$directory$character"""
+# Updated format string to include Git details
+format = """$directory$git_branch$git_status$character"""
 
-# 2. Right Side Prompt: Put everything else over here
-right_format = """$all"""
-
-[line_break]
-disabled = true
-
-# Optional: Ensure the character module doesn't push down
 [character]
 success_symbol = "[➜ ](bold green)"
 error_symbol = "[➜ ](bold red)"
 
-#[git_branch]
-#format =  '[$symbol$branch(:$remote_branch)]($style)'
